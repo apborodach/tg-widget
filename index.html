@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестовый виджет Telegram</title>
+    <!-- Обязательный скрипт Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* Цвета автоматически берутся из темы пользователя в Telegram */
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #222222);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            text-align: center;
+        }
+        .card {
+            background-color: var(--tg-theme-secondary-bg-color, #f4f4f5);
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 340px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+        p {
+            font-size: 15px;
+            color: var(--tg-theme-hint-color, #707579);
+            line-height: 1.4;
+        }
+        button {
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+        button:active {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 id="greeting">Привет, пользователь!</h2>
+    <p>Это интерактивное мини-приложение, запущенное прямо внутри Telegram.</p>
+    <button id="actionBtn">Нажать для проверки</button>
+</div>
+
+<script>
+    // Инициализируем объект Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    
+    // Сообщаем Telegram, что приложение готово к показу, и разворачиваем его
+    tg.ready();
+    tg.expand();
+
+    // Подставляем имя пользователя из Telegram, если оно доступно
+    const user = tg.initDataUnsafe?.user;
+    if (user && user.first_name) {
+        document.getElementById('greeting').innerText = `Привет, ${user.first_name}!`;
+    }
+
+    // Обработка нажатия на кнопку
+    let clicks = 0;
+    document.getElementById('actionBtn').addEventListener('click', function() {
+        clicks++;
+        // Лёгкая вибрация (Haptic Feedback) на телефоне
+        if (tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+        this.innerText = `Нажато раз: ${clicks}`;
+    });
+</script>
+
+</body>
+</html>
